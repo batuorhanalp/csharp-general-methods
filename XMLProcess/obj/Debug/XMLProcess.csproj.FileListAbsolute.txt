@@ -1,0 +1,5 @@
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\XMLProcess\bin\Debug\XMLProcess.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\XMLProcess\bin\Debug\XMLProcess.pdb
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\XMLProcess\obj\Debug\XMLProcess.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\XMLProcess\obj\Debug\XMLProcess.pdb
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\XMLProcess\obj\Debug\XMLProcess.csprojResolveAssemblyReference.cache

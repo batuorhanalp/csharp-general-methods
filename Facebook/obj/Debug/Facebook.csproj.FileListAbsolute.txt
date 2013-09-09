@@ -1,0 +1,6 @@
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Facebook\obj\Debug\Facebook.csprojResolveAssemblyReference.cache
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Facebook\bin\Debug\Facebook.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Facebook\bin\Debug\Facebook.pdb
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Facebook\bin\Debug\Facebook.xml
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Facebook\obj\Debug\Facebook.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Facebook\obj\Debug\Facebook.pdb

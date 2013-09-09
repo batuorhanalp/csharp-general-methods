@@ -1,0 +1,5 @@
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Emailing\bin\Debug\Emailing.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Emailing\bin\Debug\Emailing.pdb
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Emailing\obj\Debug\Emailing.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Emailing\obj\Debug\Emailing.pdb
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Emailing\obj\Debug\Emailing.csprojResolveAssemblyReference.cache

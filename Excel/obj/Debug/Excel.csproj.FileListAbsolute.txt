@@ -1,0 +1,6 @@
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Excel\bin\Debug\Excel.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Excel\bin\Debug\Excel.pdb
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Excel\obj\Debug\Excel.csprojResolveAssemblyReference.cache
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Excel\obj\Debug\Excel.csproj.ResolveComReference.cache
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Excel\obj\Debug\Excel.dll
+C:\Users\Batu\Dropbox\Visual Studio 2012\Projects\GeneralMethods\Excel\obj\Debug\Excel.pdb
