@@ -7,110 +7,105 @@ using System.Web.Security;
 
 namespace Cookies
 {
+    public class CookieObject
+    {
+        public string Name { get; set; }
+        public string Data { get; set; }
+    }
     public class Cookie
     {
-        public static string strUserId = "-";
-        public static string strAccessToken = "-";
-
-        //Giriş yapan hemendene kullanıcılarına ait bilgiler kriptolu olarak client'ın bilgisayarına bırakılıyor.
-        public static bool SetCookie(string cookieName, string password, string info1, string info2, string info3, DateTime expireDate)
+        //Giriş yapan kullanıcılara ait bilgiler kriptolu olarak client'ın bilgisayarına bırakılıyor.
+        public static bool SetCookie(string cookieName, string password, List<CookieObject> parameters, DateTime expireDate)
         {
             try
             {
-                string strEncryptedInfo1 = Crypto.Encrypt(password, info1);
-                string strEncryptedInfo2 = Crypto.Encrypt(password, info2);
-                string strEncryptedInfo3 = Crypto.Encrypt(password, info3);
+                var liParameters = new List<CookieObject>();
+                foreach (var param in parameters)
+                {
+                    var encData = Crypto.Encrypt(password, param.Data);
+                    var newParameter = new CookieObject
+                    {
+                        Name = param.Name,
+                        Data = encData
+                    };
+                    liParameters.Add(newParameter);
+                }
 
                 var httpCookie = HttpContext.Current.Response.Cookies[cookieName];
                 if (httpCookie != null)
                 {
-                    httpCookie["i1"] = strEncryptedInfo1;
-                    httpCookie["i2"] = strEncryptedInfo2;
-                    httpCookie["i3"] = strEncryptedInfo3;
+                    foreach (var parameter in liParameters)
+                    {
+                        httpCookie[parameter.Name] = parameter.Data;
+                    }
                     httpCookie["expire"] = expireDate.ToString();
                     httpCookie.Expires = expireDate;
                     httpCookie.HttpOnly = true;
                 }
                 else
                 {
-                    HttpCookie aCookie = new HttpCookie(cookieName);
-                    aCookie.Values["i1"] = strEncryptedInfo1;
-                    aCookie.Values["i2"] = strEncryptedInfo2;
-                    aCookie.Values["i3"] = strEncryptedInfo3;
+                    var aCookie = new HttpCookie(cookieName);
+
+                    foreach (var parameter in liParameters)
+                    {
+                        aCookie.Values[parameter.Name] = parameter.Data;
+                    }
                     aCookie.Values["expire"] = expireDate.ToString();
                     aCookie.Expires = DateTime.MinValue;
                     aCookie.HttpOnly = true;
 
                     HttpContext.Current.Response.Cookies.Add(aCookie);
 
-                    fixCookieExpireDate(cookieName, expireDate);
+                    FixCookieExpireDate(cookieName, expireDate);
                 }
             }
-            catch (Exception err)
+            catch
             {
-                string strErrorInnerMessage = "-", strErrorSource = "-", strErrorMessage = "-";
-                if (err.InnerException != null)
-                {
-                    strErrorInnerMessage = err.InnerException.Message;
-                }
-                if (err.Source != null)
-                {
-                    strErrorSource = err.Source;
-                }
-                if (err.Message != null)
-                {
-                    strErrorMessage = err.Message;
-                }
                 return false;
             }
             return true;
         }
 
         //Cookie'den bilgileri getirir
-        public static Array GetCookie(string cookieName, string password)
+        public static List<CookieObject> GetCookie(string cookieName, string password)
         {
-            var arrReturn = new List<string>();
+            var liReturn = new List<CookieObject>();
             try
             {
                 var cookie = HttpContext.Current.Request.Cookies[cookieName];
                 if (cookie != null)
                 {
-                    NameValueCollection UserInfoCookieCollection = cookie.Values;
-                    DateTime dtExpireDate = Convert.ToDateTime(HttpContext.Current.Server.HtmlEncode(UserInfoCookieCollection["expire"]));
+                    var userInfoCookieCollection = cookie.Values;
+                    var dtExpireDate = Convert.ToDateTime(HttpContext.Current.Server.HtmlEncode(userInfoCookieCollection["expire"]));
                     if (dtExpireDate > DateTime.Now.AddHours(1))
                     {
-                        arrReturn.Add(Crypto.Decrypt(password, HttpContext.Current.Server.HtmlEncode(UserInfoCookieCollection["i1"])));
-                        arrReturn.Add(Crypto.Decrypt(password, HttpContext.Current.Server.HtmlEncode(UserInfoCookieCollection["i2"])));
-                        arrReturn.Add(Crypto.Decrypt(password, HttpContext.Current.Server.HtmlEncode(UserInfoCookieCollection["i3"])));
+                        foreach (var par in userInfoCookieCollection)
+                        {
+                            var data = Crypto.Decrypt(password, HttpContext.Current.Server.HtmlEncode(userInfoCookieCollection[par.ToString()]));
+                            var newData = new CookieObject
+                            {
+                                Name = par.ToString(),
+                                Data = data
+                            };
+                            liReturn.Add(newData);
+                        }
                     }
                 }
             }
-            catch (Exception err)
+            catch
             {
-                string strErrorSource = "-", strErrorMessage = "-";
-                if (err.InnerException != null)
-                {
-                }
-                if (err.Source != null)
-                {
-                    strErrorSource = err.Source;
-                }
-                if (err.Message != null)
-                {
-                    strErrorMessage = err.Message;
-                }
+
             }
-            return arrReturn.ToArray();
+            return liReturn;
         }
 
-        public static void setTicket(string ticketName, DateTime expireDate, bool isPersistant, string data)
+        public static void SetTicket(string ticketName, DateTime expireDate, bool isPersistant, string data)
         {
-            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, ticketName, DateTime.Now, expireDate, isPersistant, data, FormsAuthentication.FormsCookiePath);
+            var ticket = new FormsAuthenticationTicket(1, ticketName, DateTime.Now, expireDate, isPersistant, data, FormsAuthentication.FormsCookiePath);
 
-            string encTicket = FormsAuthentication.Encrypt(ticket);
-            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+            var encTicket = FormsAuthentication.Encrypt(ticket);
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket) { Expires = ticket.Expiration };
 
-            cookie.Expires = ticket.Expiration;
             HttpContext.Current.Response.Cookies.Add(cookie);
         }
 
@@ -119,35 +114,25 @@ namespace Cookies
         {
             try
             {
-                var aCookie = new HttpCookie(cookieName) {Expires = DateTime.Now.AddDays(-1)};
+                var aCookie = new HttpCookie(cookieName) { Expires = DateTime.Now.AddDays(-1) };
                 HttpContext.Current.Response.Cookies.Add(aCookie);
             }
             catch (Exception err)
             {
-                string strErrorInnerMessage = "-", strErrorSource = "-", strErrorMessage = "-";
-                if (err.InnerException != null)
-                {
-                    strErrorInnerMessage = err.InnerException.Message;
-                }
-                if (err.Source != null)
-                {
-                    strErrorSource = err.Source;
-                }
-                if (err.Message != null)
-                {
-                    strErrorMessage = err.Message;
-                }
                 return false;
             }
 
             return true;
         }
 
-        private static void fixCookieExpireDate (string cookieName, DateTime expireDate)
+        private static void FixCookieExpireDate(string cookieName, DateTime expireDate)
         {
-                var httpCookie = HttpContext.Current.Response.Cookies[cookieName];
+            var httpCookie = HttpContext.Current.Response.Cookies[cookieName];
+            if (httpCookie != null)
+            {
                 httpCookie.Expires = expireDate;
                 HttpContext.Current.Response.Cookies.Add(httpCookie);
+            }
         }
     }
 }
